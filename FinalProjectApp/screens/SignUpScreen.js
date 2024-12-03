@@ -1,7 +1,7 @@
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, {useState,  useEffect} from 'react'
 import { auth } from '../firebase'
-import { createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification, signOut } from 'firebase/auth'
+import { createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification } from 'firebase/auth'
 import { useNavigation } from '@react-navigation/native'
 
 const SignUpScreen = () => {
