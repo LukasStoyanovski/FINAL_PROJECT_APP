@@ -1,10 +1,10 @@
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, {useState,  useEffect} from 'react'
 import { auth } from '../firebase'
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification, signOut } from 'firebase/auth'
 import { useNavigation } from '@react-navigation/native'
 
-const LoginScreen = () => {
+const SignUpScreen = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -16,7 +16,7 @@ const LoginScreen = () => {
             if (user.emailVerified) {
               console.log("User email is verified:", user.email);
               // Navigate to the main app or a verified user screen
-              navigation.replace("Home");
+              navigation.replace("Login");
             } else {
               console.log("User email is not verified");
               alert("Please verify your email before proceeding.");
@@ -25,26 +25,30 @@ const LoginScreen = () => {
             }
           }
         });
-    
+      
         return unsubscribe;
-    }, []);
+      }, []);
 
-    // const handleSignUp = () => {
-    //     createUserWithEmailAndPassword(auth, email, password)
-    //       .then(userCredentials => {
-    //         const user = userCredentials.user;
-    //         console.log("User signed up:", user.email);
-    //       })
-    //       .catch(error => alert(error.message));
-    //   };
-
-    const handleLogin = () => {
-        signInWithEmailAndPassword(auth, email, password)
-          .then(userCredentials => {
-            const user = userCredentials.user;
-            console.log("User signed in:", user.email);
+    const handleSignUp = () => {
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            console.log("User signed up:", user.email);
+      
+            // Send email verification
+            sendEmailVerification(user)
+              .then(() => {
+                alert("Verification email sent. Please check your inbox.");
+              })
+              .catch((error) => {
+                console.error("Error sending email verification:", error.message);
+                alert("Failed to send verification email. Try again.");
+              });
           })
-          .catch(error => alert(error.message));
+          .catch((error) => {
+            console.error("Error signing up:", error.message);
+            alert(error.message);
+          });
       };
 
   return (
@@ -52,7 +56,7 @@ const LoginScreen = () => {
     style={styles.container}
     behavior="padding"
     >
-        <Text>Login</Text>
+        <Text>Sign Up</Text>
       <View style={styles.inputContainer}>
         <TextInput
         placeholder='Email'
@@ -72,17 +76,17 @@ const LoginScreen = () => {
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={handleLogin}
+          onPress={handleSignUp}
+          style={[styles.button, styles.buttonOutline]}
+          >
+          <Text style={styles.buttonOutlineText}>Register</Text>
+        </TouchableOpacity>
+        <Text>Already have an Account?</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Login")}
           style={styles.button}
           >
           <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-        <Text>Don't have an Account?</Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Signup")}
-          style={[styles.button, styles.buttonOutline]}
-          >
-          <Text style={styles.buttonOutlineText}>Create Account</Text>
         </TouchableOpacity>
 
       </View>
@@ -90,7 +94,7 @@ const LoginScreen = () => {
   )
 }
 
-export default LoginScreen
+export default SignUpScreen
 
 const styles = StyleSheet.create({
     container: {
@@ -125,6 +129,7 @@ const styles = StyleSheet.create({
     buttonOutline:{
         backgroundColor: 'white',
         marginTop: 5,
+        marginBottom: 5,
         borderColor: '#0782F9',
         borderWidth: 2,
     },
