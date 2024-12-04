@@ -13,18 +13,11 @@ const SignUpScreen = () => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
           if (user) {
-            if (user.emailVerified) {
-              console.log("User email is verified:", user.email);
+              console.log("User created:", user);
               // Navigate to the main app or a verified user screen
-              navigation.replace("Login");
-            } else {
-              console.log("User email is not verified");
-              alert("Please verify your email before proceeding.");
-              // Optionally log the user out or navigate them to a verification screen
-              
-            }
-          }
-        });
+              navigation.replace("Verification");
+            } 
+          });
       
         return unsubscribe;
       }, []);
