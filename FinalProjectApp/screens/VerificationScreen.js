@@ -1,5 +1,5 @@
 import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { auth } from '../firebase';
