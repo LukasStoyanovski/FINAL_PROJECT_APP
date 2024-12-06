@@ -19,7 +19,7 @@ const LoginScreen = () => {
               navigation.replace("Home");
             } else {
               console.log("User email is not verified");
-              alert("Please verify your email before proceeding.");
+              
               // Optionally log the user out or navigate them to a verification screen
               
             }
@@ -42,7 +42,7 @@ const LoginScreen = () => {
         signInWithEmailAndPassword(auth, email, password)
           .then(userCredentials => {
             const user = userCredentials.user;
-            console.log("User signed in:", user.email);
+            console.log("User signed in:", user);
           })
           .catch(error => alert(error.message));
       };
@@ -79,7 +79,7 @@ const LoginScreen = () => {
         </TouchableOpacity>
         <Text>Don't have an Account?</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Signup")}
+          onPress={() => navigation.navigate("Welcome")}
           style={[styles.button, styles.buttonOutline]}
           >
           <Text style={styles.buttonOutlineText}>Create Account</Text>
